@@ -3,7 +3,7 @@ import cors from 'cors';
 const corsMiddleware = cors({
   origin: ['http://localhost:5173', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Device-Name'],
   credentials: true
 });
 

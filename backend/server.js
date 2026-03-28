@@ -3,6 +3,7 @@ import express from 'express';
 import { initDB } from './config/database.js';
 import corsMiddleware from './middleware/cors.js';
 import errorHandler from './middleware/errorHandler.js';
+import requestLogger from './middleware/requestLogger.js';
 
 import healthRouter from './routes/health.js';
 import chatRouter from './routes/chat.js';
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(corsMiddleware);
 app.use(express.json());
+app.use(requestLogger);
 
 // Routes
 app.use('/api/health', healthRouter);
