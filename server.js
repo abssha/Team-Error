@@ -31,7 +31,7 @@ app.use(errorHandler);
 // Boot
 async function start() {
   await initDB();
-  app.listen(PORT, () => {
+  app.listen(PORT,'0.0.0.0', () => {
     console.log(`🚀 Phantom Load API running on http://localhost:${PORT}`);
   });
 }
