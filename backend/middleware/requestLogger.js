@@ -1,4 +1,5 @@
 const seenDevices = new Set();
+const SENSITIVE_KEYS = new Set(['authorization', 'password', 'password_hash', 'token']);
 
 function normalizeIp(ipAddress) {
   if (!ipAddress) return 'unknown-ip';
@@ -85,12 +86,29 @@ function shouldLogBody(req) {
   return ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method);
 }
 
+function sanitizeForLogging(value) {
+  if (Array.isArray(value)) {
+    return value.map(sanitizeForLogging);
+  }
+
+  if (!value || typeof value !== 'object') {
+    return value;
+  }
+
+  return Object.fromEntries(
+    Object.entries(value).map(([key, entryValue]) => [
+      key,
+      SENSITIVE_KEYS.has(key.toLowerCase()) ? '[REDACTED]' : sanitizeForLogging(entryValue)
+    ])
+  );
+}
+
 function serializeBody(body) {
   if (!body || typeof body !== 'object') return '';
   if (!Object.keys(body).length) return '';
 
   try {
-    const preview = JSON.stringify(body);
+    const preview = JSON.stringify(sanitizeForLogging(body));
     return preview.length > 250 ? `${preview.slice(0, 247)}...` : preview;
   } catch {
     return '[unserializable body]';

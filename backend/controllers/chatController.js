@@ -6,7 +6,7 @@ export const chatController = {
     try {
       const { message, history = [] } = req.body;
 
-      const systemPrompt = await buildSystemPrompt();
+      const systemPrompt = await buildSystemPrompt(req.user._id);
 
       // Build Gemini-format history (excludes the latest message)
       const geminiHistory = history.map(h => ({
@@ -15,7 +15,10 @@ export const chatController = {
       }));
 
       const chat = gemini.startChat({
-        systemInstruction: systemPrompt,
+        systemInstruction: {
+          role: 'system',
+          parts: [{ text: systemPrompt }]
+        },
         history: geminiHistory
       });
 

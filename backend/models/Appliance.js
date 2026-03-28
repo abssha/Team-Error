@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const applianceSchema = new mongoose.Schema({
+  user_id:       { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   room_id:       { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
   name:          { type: String, required: true, trim: true },
   wattage:       { type: Number, required: true },

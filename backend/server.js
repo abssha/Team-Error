@@ -4,8 +4,10 @@ import { initDB } from './config/database.js';
 import corsMiddleware from './middleware/cors.js';
 import errorHandler from './middleware/errorHandler.js';
 import requestLogger from './middleware/requestLogger.js';
+import requireAuth from './middleware/auth.js';
 
 import healthRouter from './routes/health.js';
+import authRouter from './routes/auth.js';
 import chatRouter from './routes/chat.js';
 import roomsRouter from './routes/rooms.js';
 import appliancesRouter from './routes/appliances.js';
@@ -21,11 +23,12 @@ app.use(requestLogger);
 
 // Routes
 app.use('/api/health', healthRouter);
-app.use('/api/chat', chatRouter);
-app.use('/api/rooms', roomsRouter);
-app.use('/api/rooms', appliancesRouter);   // nested: /api/rooms/:id/appliances
-app.use('/api/appliances', appliancesRouter);
-app.use('/api/settings', settingsRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/chat', requireAuth, chatRouter);
+app.use('/api/rooms', requireAuth, roomsRouter);
+app.use('/api/rooms', requireAuth, appliancesRouter);   // nested: /api/rooms/:id/appliances
+app.use('/api/appliances', requireAuth, appliancesRouter);
+app.use('/api/settings', requireAuth, settingsRouter);
 
 // Global error handler (must be last)
 app.use(errorHandler);

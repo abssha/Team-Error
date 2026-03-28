@@ -2,10 +2,10 @@ import { Appliance } from '../models/Appliance.js';
 import { Room } from '../models/Room.js';
 import { Settings } from '../models/Settings.js';
 
-export async function buildSystemPrompt() {
-  const rooms = await Room.find().sort({ createdAt: 1 });
-  const appliances = await Appliance.find();
-  const rateSetting = await Settings.findOne({ key: 'ratePerUnit' });
+export async function buildSystemPrompt(userId) {
+  const rooms = await Room.find({ user_id: userId }).sort({ createdAt: 1 });
+  const appliances = await Appliance.find({ user_id: userId });
+  const rateSetting = await Settings.findOne({ user_id: userId, key: 'ratePerUnit' });
   const ratePerUnit = rateSetting?.value ?? 8;
 
   let inventorySummary = '';
